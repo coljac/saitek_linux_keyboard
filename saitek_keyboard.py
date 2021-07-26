@@ -33,7 +33,6 @@ def read_mapping(filename, skip_comments=True):
 
 
 def keystroke(key):
-    # subprocess.call(["xdotool", "getactivewindow", "key", key])
     subprocess.call(["xdotool", "key", key])
 
 
