@@ -33,7 +33,8 @@ def read_mapping(filename, skip_comments=True):
 
 
 def keystroke(key):
-    subprocess.call(["xdotool", "getactivewindow", "key", key])
+    # subprocess.call(["xdotool", "getactivewindow", "key", key])
+    subprocess.call(["xdotool", "key", key])
 
 
 def handle_event(line, mapping):
@@ -59,11 +60,12 @@ def main():
     parser.add_argument('--verbose', action="store_true", help="Verbose logging of events")
     parser.add_argument('--show-mapping', action="store_true", help="Show mapping and quit")
     parser.add_argument('--device', type=str, default="/dev/input/event4", help="Device file: run evtest to find.")
+    parser.add_argument('--mapping', type=str, default="mapping.csv", help="Mapping file")
     args = parser.parse_args()
     config['verbose'] = args.verbose
 
     cmd = f"evtest {args.device}"
-    mapping = read_mapping("mapping.csv")
+    mapping = read_mapping(args.mapping)
     if args.show_mapping:
         for k, v in mapping.items():
             print(f"{names_map[k]}  --> {v}")

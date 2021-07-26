@@ -19,7 +19,7 @@ Available devices:
 Select the device event number [0-4]: 
 ```
 2. Either modify the script so that the correct device is specified (in my case, `/dev/input/event4`) or pass this in as an argument with `--device`.
-3. Modify the `mapping.csv` so that your preferred keystrokes are in there. The format is `switch name,state,keystroke`. The switch names are in the python file and appended below. The possible states are "0" or "1" in every case. The keystrokes are strings passed to `xdotool`, so see the xdotool docs for more information. Quick hint: "A", "F5", "ctrl+c" do what you'd expect. You can run in verbose mode to experiment with these values.
+3. Modify the `mapping.csv` (or another file, specified as an argument with `--mapping`) so that your preferred keystrokes are in there. The format is `switch name,state,keystroke`. The switch names are in the python file and appended below. The possible states are "0" or "1" in every case. The keystrokes are strings passed to `xdotool`, so see the xdotool docs for more information. Quick hint: "A", "F5", "ctrl+c" do what you'd expect. You can run in verbose mode to experiment with these values.
 4. Run the script as `python saitek_keymap.py`. `python saitek_keymap.py --verbose` will print debug info, `python saitek_keymap.py --show-mapping` will validate and display the results of parsing `mapping.csv`.
 
 Button names:
