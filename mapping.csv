@@ -1,0 +1,5 @@
+# Example mappings
+battery,0,A
+battery,1,B
+alternator,0,ctrl+f
+alternator,1,alt+a
