@@ -1,6 +1,6 @@
 # Saitek Linux keyboard emulation
 
-This is not the world's most sophisticated piece of softwar, but it works.
+This is not the world's most sophisticated piece of softwar, but it works. It's not actually proper keyboard emulation, but it does produce keystrokes with `xdotool`. 
 
 While looking into various USB APIs in order to capture events from the Saitek Flight Switch Panel, I discovered that `evtest` displays events from the device just fine. So, rather than dive deeper down the USB specification I'm just reading stdout from this process and doing a simple mapping, then using `xdotool` to emulate keystrokes. 
 
