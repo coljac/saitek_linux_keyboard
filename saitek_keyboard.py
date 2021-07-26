@@ -32,8 +32,12 @@ def read_mapping(filename, skip_comments=True):
     return mapping
 
 
+def typestring(string):
+    subprocess.call(["xdotool", "type", "--clearmodifiers", string])
+
+
 def keystroke(key):
-    subprocess.call(["xdotool", "key", key])
+    subprocess.call(["xdotool", "key", "--clearmodifiers", key])
 
 
 def handle_event(line, mapping):
@@ -48,7 +52,10 @@ def handle_event(line, mapping):
         try:
             key = mapping[button][state]
             log(f"Sending keystroke {key}")
-            keystroke(key)
+            if not key.startswith("!"):
+                keystroke(key)
+            else:
+                typestring(key[1:])
         except Exception as e:
             log(e)
     except Exception as e:
