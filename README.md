@@ -1,4 +1,4 @@
-# Saitek Linux keyboard emulation
+# Saitek Flight Panel keyboard emulation for Linux
 
 This is not the world's most sophisticated piece of software, but it works. It's not actually proper keyboard emulation, but it does produce keystrokes with `xdotool`. 
 
