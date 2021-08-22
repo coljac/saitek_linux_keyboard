@@ -25,6 +25,8 @@ def read_mapping(filename, skip_comments=True):
     if skip_comments:
         lines = [l.strip() for l in lines if not l.startswith("#")]
     for l in lines:
+        if len(l) == 0:
+            continue
         x = l.split(",")
         if x[1] not in ["0", "1"]:
             print(f"Warning: state value {x[1]} may not be correct in line '{l}'")
