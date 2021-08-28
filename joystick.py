@@ -7,19 +7,11 @@ import datetime
 from datetime import timedelta
 import os
 
-names = "battery alternator avionics fuel deice pitot cowl panel beacon nav strobe taxi landing engine_off engine_l engine_r engine_both engine_start gear_up gear_down"
-
-names_map = {}
 config = {"verbose": False}
-
 
 def log(s):
     if config["verbose"]:
         print(str(s))
-
-for i, n in enumerate(names.split()):
-    names_map[n] = 256 + i
-    names_map[256+i] = n
 
 def read_mapping(filename, skip_comments=True):
     with open(filename, "r") as f:
@@ -32,9 +24,10 @@ def read_mapping(filename, skip_comments=True):
         if len(l) == 0:
             continue
         x = l.split(",")
-        if x[1] not in ["0", "1"]:
+        button, value, action = x
+        if value not in ["0", "1"]:
             print(f"Warning: state value {x[1]} may not be correct in line '{l}'")
-        mapping[names_map[x[0]]][x[1]] = x[2]
+        mapping[button][value] = action
     return mapping
 
 def ismodified(config_file, last_loaded):
@@ -46,19 +39,28 @@ def typestring(string):
     subprocess.call(["xdotool", "type", "--clearmodifiers", string])
 
 
-def keystroke(key):
-    subprocess.call(["xdotool", "key", "--clearmodifiers", key])
+def keystroke(key, up=False, down=False):
+    # subprocess.call(["xdotool", "key", "--clearmodifiers", key])
+    # subprocess.call(["xdotool", "key", key])
+    if down:
+        subprocess.call(["xdotool", "keydown", "--clearmodifiers", key])
+    if up:
+        subprocess.call(["xdotool", "keyup", "--clearmodifiers", key])
+    if not up and not down:
+        subprocess.call(["xdotool", "key", key])
+
 
 
 def handle_event(line, mapping):
-    log(f"Raw event string: {line}")
-    if (not "EV_KEY" in line) and ("time" in line):
+    log(f"Raw event string: >{line.strip()}<")
+    if (not "EV_KEY" in line) and (not "EV_ABS" in line): #and ("time" in line):
         return
     toks = line.strip().split(" ")
     try:
-        button = int(toks[7])
+        evtype = toks[5][1:-2]
+        button = toks[8][1:-2]
         state = toks[-1]
-        log(f"Button code = {button}, with name '{names_map[button]}', set to state: {state}")
+        log(f"{evtype}: Button code = {button}, set to state: {state}")
         try:
             key = mapping[button][state]
             log(f"Sending keystroke {key}")
@@ -72,7 +74,7 @@ def handle_event(line, mapping):
         log(e)
 
 def main():
-    parser = argparse.ArgumentParser(description="Saitek Flight Panel events to keystrokes")
+    parser = argparse.ArgumentParser(description="Joystick to xdotool mapper")
     parser.add_argument('--verbose', action="store_true", help="Verbose logging of events")
     parser.add_argument('--show-mapping', action="store_true", help="Show mapping and quit")
     parser.add_argument('--device', type=str, default="/dev/input/event4", help="Device file: run evtest to find.")
@@ -86,7 +88,8 @@ def main():
 
     if args.show_mapping:
         for k, v in mapping.items():
-            print(f"{names_map[k]}  --> {v}")
+            for l, w in v.items():
+                print(f"{k} - {l} --> {w}")
         return
 
     p = Popen(cmd, shell=True, stdout=PIPE, bufsize=1, universal_newlines=True)

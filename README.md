@@ -45,3 +45,18 @@ engine_start
 gear_up
 gear_down
 ```
+
+## Joystick use
+I wanted to map a button on my joystick to the global hotkey for re-centering opentrack. The script `joystick.py` will help you accomplish this. For an event like:
+
+```
+time 1630135360.633106, type 3 (EV_KEY), code 17 (BTN_TOP), value 1
+```
+
+create a mapping like:
+
+```
+BTN_TOP,1,F11
+```
+
+The event type (e.g. EV_KEY or EV_ABS) is ignored in this case. Then pass this mapping to joystick.py as above, e.g. `python joystick.py --mapping joy.csv --device /dev/input/event3` 
